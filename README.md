@@ -1,6 +1,6 @@
 # AudioMaxing
 
-**Mais controle sobre o áudio do seu PC.**
+Amplificador de áudio para Windows 10/11, com ganho adicional e limitador de picos para o fone ou dispositivo de saída escolhido.
 
 Windows 10/11 · C# / WPF · WASAPI · Licença MIT
 
@@ -13,9 +13,7 @@ Windows 10/11 · C# / WPF · WASAPI · Licença MIT
 
 **Requer VB-CABLE e .NET 7 Desktop Runtime x64.** O driver não acompanha o projeto.
 
-Amplificador de áudio para Windows 10/11. O AudioMaxing recebe o áudio de um dispositivo virtual, aplica ganho com transição gradual e um limitador de picos, e o envia ao fone escolhido. Não é apenas um controle do volume mestre do Windows.
-
-## Arquitetura real
+## Como funciona
 
 ```text
 YouTube e outros aplicativos
@@ -31,19 +29,13 @@ fone selecionado (WASAPI compartilhado)
 
 O destino físico é aberto explicitamente pelo programa. Portanto, o áudio não volta ao cabo e não forma um ciclo. O programa troca a saída padrão para `CABLE Input` ao ativar e restaura a anterior ao desativar, fechar, usar Emergência ou sofrer uma exceção tratável. Também grava o ID anterior em `%LOCALAPPDATA%\AudioMaxing\previous-output.txt`; se a execução terminar abruptamente, a próxima inicialização tenta restaurá-lo.
 
-O Windows usa uma interface COM `IPolicyConfig` não documentada para a troca do endpoint padrão. Ela funciona nas versões atuais do Windows 10/11, mas não tem garantia pública de estabilidade da Microsoft. Se ela mudar, a recuperação manual está documentada abaixo.
-
 ## Dependências e licenças
 
-- [.NET 7 Desktop Runtime/SDK](https://dotnet.microsoft.com/download/dotnet/7.0): necessário para executar/compilar esta distribuição. A máquina de desenvolvimento já possuía o SDK 7.0.203.
+- [.NET 7](https://dotnet.microsoft.com/download/dotnet/7.0): Desktop Runtime x64 para executar ou SDK para compilar.
 - [NAudio.Wasapi 2.2.1](https://www.nuget.org/packages/NAudio.Wasapi/2.2.1) e sua dependência NAudio.Core: bibliotecas WASAPI, licença MIT; restauradas pelo NuGet durante a compilação.
 - [VB-CABLE](https://vb-audio.com/Cable/): driver de cabo virtual da VB-Audio. É donationware; uso e redistribuição devem obedecer aos termos do fornecedor. Não é incluído nem instalado por este repositório.
 
-O VB-CABLE é obrigatório para processar o áudio de outros aplicativos sem tocar simultaneamente a cópia original. **Ele não foi instalado automaticamente.**
-
-## Instalação do componente externo
-
-Faça isto apenas depois de decidir autorizar a alteração de driver:
+## Instalar o VB-CABLE
 
 1. Baixe `VBCABLE_Driver_Pack*.zip` no site oficial da VB-Audio.
 2. Extraia o ZIP.
@@ -68,7 +60,7 @@ A restauração baixa as dependências pelo NuGet oficial. Para gerar a pasta de
 .\build.ps1 Publish
 ```
 
-Saída: `dist\AudioMaxing\AudioMaxing.exe`. Preserve a pasta inteira ou use `dist\AudioMaxing-win-x64.zip`, pois as DLLs acompanham o executável.
+Saída: `dist\AudioMaxing\AudioMaxing.exe`. Preserve a pasta inteira, pois as DLLs acompanham o executável.
 
 ## Uso seguro
 
@@ -97,15 +89,11 @@ Use inicialmente um conteúdo conhecido em volume baixo e mantenha o fone fora d
 
 1. No AudioMaxing, clique **EMERGÊNCIA: DESATIVAR** e feche-o.
 2. Em **Configurações → Sistema → Som**, escolha manualmente seu fone como saída, caso o cabo ainda esteja selecionado.
-3. Apague a pasta do AudioMaxing; ele não grava no Registro nem instala serviços.
+3. Apague a pasta do AudioMaxing.
 4. Para remover o VB-CABLE, execute `VBCABLE_Setup_x64.exe` como administrador, clique **Remove Driver** e reinicie. Consulte os termos/instruções da versão baixada.
 5. Opcionalmente apague `%LOCALAPPDATA%\AudioMaxing`; ali existe apenas o arquivo temporário de recuperação.
 
-## Estado desta entrega e limitações
-
-Implementado no código: pipeline WASAPI, ganho real de 0 a +24 dB, rampa, limitador, medição pós-processamento, seleção de saída, alerta, emergência e restauração. A seleção escolhe o destino físico; ao ativar, todos os aplicativos que seguem o endpoint padrão passam pelo cabo.
-
-Compilação Release concluída sem erros ou avisos; inicialização da interface verificada. O autor confirmou o funcionamento com áudio real no próprio computador após instalar o VB-CABLE. Isso não substitui testes de compatibilidade em outros equipamentos ou medições formais de latência e distorção.
+## Limitações
 
 Fontes em modo exclusivo, DRM ou apps presos a outro endpoint podem não atravessar o cabo. Nenhum software pode exceder a potência física do DAC/amplificador/fone; ganho digital excessivo apenas aciona o limitador ou aumenta distorção/ruído.
 
