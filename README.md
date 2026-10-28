@@ -1,5 +1,18 @@
 # AudioMaxing
 
+**Mais controle sobre o áudio do seu PC.**
+
+Windows 10/11 · C# / WPF · WASAPI · Licença MIT
+
+## Recursos
+
+- Interface em português e seleção do fone de saída.
+- Ganho adicional de 0 a +24 dB com transição gradual.
+- Limitador de picos, medidor de nível e alerta para ganho elevado.
+- Botão de emergência e tentativa de restauração da saída anterior.
+
+**Requer VB-CABLE e .NET 7 Desktop Runtime x64.** O driver não acompanha o projeto.
+
 Amplificador de áudio para Windows 10/11. O AudioMaxing recebe o áudio de um dispositivo virtual, aplica ganho com transição gradual e um limitador de picos, e o envia ao fone escolhido. Não é apenas um controle do volume mestre do Windows.
 
 ## Arquitetura real
@@ -43,12 +56,13 @@ Faça isto apenas depois de decidir autorizar a alteração de driver:
 Pré-requisitos: Windows 10/11 x64, PowerShell e SDK .NET 7.
 
 ```powershell
-Set-Location C:\Users\gilberto.ambrosio\Desktop\AudioMaxing
+git clone https://github.com/Ambrosios13/AudioMaxing.git
+Set-Location AudioMaxing
 .\build.ps1 Build
 .\src\AudioMaxing\bin\Release\net7.0-windows\AudioMaxing.exe
 ```
 
-Os pacotes NAudio baixados ficam em `packages`, permitindo restauração offline. Para gerar a pasta de distribuição:
+A restauração baixa as dependências pelo NuGet oficial. Para gerar a pasta de distribuição:
 
 ```powershell
 .\build.ps1 Publish
@@ -91,4 +105,14 @@ Use inicialmente um conteúdo conhecido em volume baixo e mantenha o fone fora d
 
 Implementado no código: pipeline WASAPI, ganho real de 0 a +24 dB, rampa, limitador, medição pós-processamento, seleção de saída, alerta, emergência e restauração. A seleção escolhe o destino físico; ao ativar, todos os aplicativos que seguem o endpoint padrão passam pelo cabo.
 
-Não validado neste ambiente: áudio ao vivo, instalação do driver e executável final, pois o VB-CABLE não foi autorizado/instalado e a rede do ambiente bloqueou o download do pacote NAudio. A restauração NuGet falhou antes da compilação; portanto, não se declara aqui que o binário foi compilado. Fontes em modo exclusivo, DRM ou apps presos a outro endpoint podem não atravessar o cabo. Nenhum software pode exceder a potência física do DAC/amplificador/fone; ganho digital excessivo apenas aciona o limitador ou aumenta distorção/ruído.
+Compilação Release concluída sem erros ou avisos; inicialização da interface verificada. O autor confirmou o funcionamento com áudio real no próprio computador após instalar o VB-CABLE. Isso não substitui testes de compatibilidade em outros equipamentos ou medições formais de latência e distorção.
+
+Fontes em modo exclusivo, DRM ou apps presos a outro endpoint podem não atravessar o cabo. Nenhum software pode exceder a potência física do DAC/amplificador/fone; ganho digital excessivo apenas aciona o limitador ou aumenta distorção/ruído.
+
+## Contribuições
+
+Relate problemas nas Issues com a versão do Windows, dispositivo de áudio e passos para reproduzir. Sugestões e pull requests são bem-vindos.
+
+## Licença
+
+Código do AudioMaxing sob [licença MIT](LICENSE). NAudio e VB-CABLE têm licenças próprias, indicadas acima.
