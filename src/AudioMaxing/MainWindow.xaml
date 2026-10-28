@@ -1,0 +1,54 @@
+<Window x:Class="AudioMaxing.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="AudioMaxing" Height="590" Width="720" MinHeight="560" MinWidth="650"
+        WindowStartupLocation="CenterScreen" Background="#101318" Foreground="#F2F4F8">
+  <Window.Resources>
+    <Style TargetType="Button"><Setter Property="Padding" Value="14,9"/><Setter Property="Margin" Value="4"/></Style>
+    <Style TargetType="ComboBox"><Setter Property="Padding" Value="8"/><Setter Property="Margin" Value="0,6,0,14"/></Style>
+    <Style TargetType="TextBlock"><Setter Property="TextWrapping" Value="Wrap"/></Style>
+  </Window.Resources>
+  <Grid Margin="28">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/>
+    </Grid.RowDefinitions>
+    <StackPanel Grid.Row="0">
+      <TextBlock Text="AudioMaxing" FontSize="30" FontWeight="SemiBold"/>
+      <TextBlock Text="Ganho real no caminho de reprodução via VB-CABLE" Foreground="#AEB7C5" Margin="0,4,0,20"/>
+      <TextBlock Text="Dispositivo de saída (fone / alto-falante)" FontWeight="SemiBold"/>
+      <ComboBox x:Name="OutputDevices" DisplayMemberPath="FriendlyName" SelectionChanged="OutputDevices_SelectionChanged"/>
+    </StackPanel>
+
+    <Border Grid.Row="1" Background="#1B2029" CornerRadius="8" Padding="16" Margin="0,0,0,14">
+      <Grid>
+        <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+        <StackPanel>
+          <TextBlock Text="Ganho adicional" FontWeight="SemiBold"/>
+          <TextBlock x:Name="GainLabel" Text="0,0 dB" FontSize="25" Margin="0,4"/>
+          <Slider x:Name="GainSlider" Minimum="0" Maximum="24" Value="0" TickFrequency="1"
+                  IsSnapToTickEnabled="False" ValueChanged="GainSlider_ValueChanged" Width="440" HorizontalAlignment="Left"/>
+          <TextBlock Text="O ganho muda gradualmente. Acima de +12 dB exige confirmação." Foreground="#AEB7C5" FontSize="12"/>
+        </StackPanel>
+        <Button Grid.Column="1" x:Name="ToggleButton" Content="ATIVAR" Click="ToggleButton_Click" MinWidth="115" Height="54"/>
+      </Grid>
+    </Border>
+
+    <StackPanel Grid.Row="2" Margin="0,0,0,14">
+      <TextBlock Text="Nível de saída" FontWeight="SemiBold"/>
+      <ProgressBar x:Name="LevelMeter" Minimum="-60" Maximum="0" Value="-60" Height="18" Margin="0,7,0,4"/>
+      <Grid><TextBlock x:Name="LevelLabel" Text="−∞ dBFS"/><TextBlock x:Name="ClipLabel" Text="SEM SATURAÇÃO" HorizontalAlignment="Right" Foreground="#76D39B" FontWeight="Bold"/></Grid>
+    </StackPanel>
+
+    <Border Grid.Row="3" Background="#352817" BorderBrush="#A87524" BorderThickness="1" CornerRadius="7" Padding="12" Margin="0,0,0,14">
+      <TextBlock Text="⚠ Volume elevado pode causar perda auditiva e danificar equipamentos. O limitador segura picos de amostras em −1 dBFS, mas não detecta picos entre amostras, não corrige distorção anterior e não torna a audição segura."/>
+    </Border>
+
+    <TextBlock Grid.Row="4" x:Name="StatusText" Text="Pronto. Ganho em 0 dB." Foreground="#B8C5D8" Margin="0,0,0,10"/>
+
+    <StackPanel Grid.Row="6" Orientation="Horizontal" HorizontalAlignment="Right">
+      <Button Content="Restaurar padrões" Click="ResetButton_Click"/>
+      <Button Content="EMERGÊNCIA: DESATIVAR" Click="EmergencyButton_Click" Background="#B4232B" Foreground="White" FontWeight="Bold"/>
+    </StackPanel>
+  </Grid>
+</Window>

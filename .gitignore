@@ -1,0 +1,10 @@
+bin/
+obj/
+.vs/
+.nuget-packages/
+.git-local/
+packages/
+external/
+dist/
+*.user
+*.suo
